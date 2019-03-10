@@ -35,6 +35,9 @@
     <aura:handler event="c:M_CloseAddPosterEvent"
                   action="{!c.handleCloseAddPoster}"/>
 
+    <aura:handler event="c:M_SearchTop10Event"
+                  action="{!c.handleClear}"/>
+
     <aura:if isTrue="{!not(empty(v.responseMovie))}">
         <lightning:card title="Search movie results">
             <aura:set attribute="actions">

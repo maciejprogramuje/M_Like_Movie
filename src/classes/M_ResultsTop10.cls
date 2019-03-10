@@ -1,4 +1,4 @@
-public with sharing class M_ResultsFavorites {
+public with sharing class M_ResultsTop10 {
     public static String endpoint = 'https://api.themoviedb.org/3';
     public static String apiKey = '2a226b222f0619bd09647e3c738cf7ee';
 
@@ -7,7 +7,8 @@ public with sharing class M_ResultsFavorites {
         List<MovieExtras__c> favoritesMovies = [SELECT Id, IdMovie__c
             FROM MovieExtras__c
             WHERE IsFavorite__c = true
-            ORDER BY Name];
+            ORDER BY All_Votes__c DESC NULLS LAST
+            LIMIT 10];
 
         M_ResponseMovie tempResponseMovie = new M_ResponseMovie();
         tempResponseMovie.page = 1;

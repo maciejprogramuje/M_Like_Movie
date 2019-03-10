@@ -15,6 +15,10 @@
         helper.allFavorites(component, event);
     },
 
+    clickTop10: function(component, event, helper) {
+        helper.top10(component, event);
+    },
+
     clickAllHated: function(component, event, helper) {
         helper.allHated(component, event);
     },

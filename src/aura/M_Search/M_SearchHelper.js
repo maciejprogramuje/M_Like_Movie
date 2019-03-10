@@ -50,6 +50,12 @@
         searchEvent.fire();
     },
 
+    top10: function(component, event) {
+        let searchEvent = $A.get("e.c:M_SearchTop10Event");
+        searchEvent.setParam("pageToSearch", 1);
+        searchEvent.fire();
+    },
+
     allHated: function(component, event) {
         let searchEvent = $A.get("e.c:M_SearchHatedEvent");
         searchEvent.setParam("pageToSearch", 1);

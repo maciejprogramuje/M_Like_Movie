@@ -24,6 +24,9 @@
     <aura:handler event="c:M_SearchFavoritesPersonsEvent"
                   action="{!c.handleClear}"/>
 
+    <aura:handler event="c:M_SearchTop10Event"
+                  action="{!c.handleClear}"/>
+
 
     <aura:if isTrue="{!not(empty(v.responsePerson))}">
         <lightning:card title="Your hated actors">

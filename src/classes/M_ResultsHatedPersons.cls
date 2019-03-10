@@ -5,7 +5,7 @@ public with sharing class M_ResultsHatedPersons {
 
     @AuraEnabled
     public static M_ResponsePerson getHatedPersons() {
-        hatedPersons = [SELECT Id, IdPerson__c FROM Person_Extras__c WHERE IsHate__c = true];
+        hatedPersons = [SELECT Id, IdPerson__c FROM Person_Extras__c WHERE IsHate__c = true ORDER BY Name];
 
         M_ResponsePerson tempResponsePerson = new M_ResponsePerson();
         tempResponsePerson.page = 1;

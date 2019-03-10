@@ -95,6 +95,14 @@
                                           variant="success"
                                           onclick="{!c.clickAllFavoritesPersons}"/>
                     </div>
+
+                    <div class="slds-m-top--small" style="text-align: center;">
+
+                        <lightning:button label="Show TOP 10 movies"
+                                          class="btn"
+                                          variant="brand"
+                                          onclick="{!c.clickTop10}"/>
+                    </div>
                 </lightning:tab>
 
                 <lightning:tab label="Hated" id="searchHatedTab">

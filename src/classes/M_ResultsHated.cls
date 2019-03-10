@@ -4,7 +4,7 @@ public with sharing class M_ResultsHated {
 
     @AuraEnabled
     public static M_ResponseMovie getHatedMovies() {
-        List<MovieExtras__c> hatedMovies = [SELECT Id, IdMovie__c FROM MovieExtras__c WHERE IsHate__c = true];
+        List<MovieExtras__c> hatedMovies = [SELECT Id, IdMovie__c FROM MovieExtras__c WHERE IsHate__c = true ORDER BY Name];
 
         M_ResponseMovie tempResponseMovie = new M_ResponseMovie();
         tempResponseMovie.page = 1;

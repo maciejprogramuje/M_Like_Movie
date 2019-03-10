@@ -1,13 +1,16 @@
-<aura:component description="M_ResultsFavorites"
+<aura:component description="M_ResultsTop10"
                 implements="flexipage:availableForAllPageTypes"
-                controller="M_ResultsFavorites">
+                controller="M_ResultsTop10">
 
     <aura:attribute name="page" type="Integer"/>
     <aura:attribute name="responseMovie" type="M_ResponseMovie"/>
     <aura:attribute name="selectedMovieId" type="String"/>
 
-    <aura:handler event="c:M_SearchFavoritesEvent"
+    <aura:handler event="c:M_SearchTop10Event"
                   action="{!c.handleSearch}"/>
+
+    <aura:handler event="c:M_SearchFavoritesEvent"
+                  action="{!c.handleClear}"/>
 
     <aura:handler event="c:M_SearchEvent"
                   action="{!c.handleClear}"/>
@@ -24,36 +27,8 @@
     <aura:handler event="c:M_SearchHatedPersonsEvent"
                   action="{!c.handleClear}"/>
 
-    <aura:handler event="c:M_SearchTop10Event"
-                  action="{!c.handleClear}"/>
-
     <aura:if isTrue="{!not(empty(v.responseMovie))}">
-        <lightning:card title="Your favorites movies">
-
-            <div style="text-align: center;">
-                <fieldset class="slds-theme--default">
-                    <form class="slds-form--stacked">
-
-                        <lightning:button label="Previous page"
-                                          class="btn"
-                                          variant="brand"
-                                          onclick="{!c.clickPreviousPage}"
-                                          disabled="{!not(and((v.page gt 1), (not(empty(v.responseMovie)))))}"/>
-
-                        <aura:if isTrue="{!not(empty(v.responseMovie))}">
-                            <span class="slds-text-body_regular slds-m-around_medium slds-p-top--medium">
-                                {!v.page}/{!v.responseMovie.total_pages}
-                            </span>
-                        </aura:if>
-
-                        <lightning:button label="Next page"
-                                          class="btn"
-                                          variant="brand"
-                                          onclick="{!c.clickNextPage}"
-                                          disabled="{!not(v.page lt v.responseMovie.total_pages)}"/>
-                    </form>
-                </fieldset>
-            </div>
+        <lightning:card title="Top 10 favorites movies">
 
             <div class="c-container">
                 <lightning:layout verticalAlign="stretch"

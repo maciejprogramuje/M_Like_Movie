@@ -5,7 +5,7 @@ public with sharing class M_ResultsFavoritesPersons {
 
     @AuraEnabled
     public static M_ResponsePerson getFavPersons() {
-        favoritesPersons = [SELECT Id, IdPerson__c FROM Person_Extras__c WHERE IsFavorite__c = true];
+        favoritesPersons = [SELECT Id, IdPerson__c FROM Person_Extras__c WHERE IsFavorite__c = true ORDER BY Name];
 
         M_ResponsePerson tempResponsePerson = new M_ResponsePerson();
         tempResponsePerson.page = 1;

@@ -339,6 +339,10 @@
                             <option name="name" value="M_ResponsePersonDetailsMore" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="M_ResultsTop10" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
                         </list>
                       </option>
                       <option name="name" value="ApexClass" />
@@ -749,6 +753,14 @@
                           </MetadataEntry>
                           <MetadataEntry>
                             <option name="name" value="M_CloseAddPosterEvent" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="M_SearchTop10Event" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="M_ResultsTop10" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
                         </list>

@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="M_SearchTop10Event">
+    <aura:attribute name="pageToSearch" type="Integer"/>
+</aura:event>
