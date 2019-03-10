@@ -1,0 +1,130 @@
+<aura:component description="M_DetailsPerson"
+                implements="flexipage:availableForAllPageTypes"
+                controller="M_DetailsPerson">
+
+    <aura:attribute name="person" type="M_ResponsePerson.Result"/>
+    <aura:attribute name="personKnownFor" type="M_ResponseCredits"/>
+    <aura:attribute name="personExtras" type="Person_Extras__c"/>
+    <aura:attribute name="personDetailsMore" type="M_ResponsePersonDetailsMore"/>
+
+    <aura:handler event="c:M_SelectedPersonTileEvent"
+                  action="{!c.clickedTile}"/>
+
+    <aura:handler event="c:M_SelectedMovieTileEvent"
+                  action="{!c.handleClear}"/>
+
+    <aura:handler event="c:M_ClearSearchEvent"
+                  action="{!c.handleClear}"/>
+
+    <aura:handler event="c:M_SelectedPersonSmallTileEvent"
+                  action="{!c.clickedTile}"/>
+
+    <aura:handler event="c:M_SelectedMovieSmallTileEvent"
+                  action="{!c.handleClear}"/>
+
+
+    <aura:if isTrue="{!not(empty(v.person))}">
+        <lightning:card title="Actor's Details">
+
+            <lightning:layout multipleRows="true">
+
+                <lightning:layoutItem flexibility="auto" size="6" padding="around-small">
+                    <div class="imageView"
+                         style="{!empty(v.person.profile_path) ? 'margin: 0 auto; background-image:url(' + $Resource.actor_big + ')' : 'margin: 0 auto; background-image:url(http://image.tmdb.org/t/p/w342/' + v.person.profile_path + ')'}">
+                    </div>
+
+                    <div class="slds-m-around--small" style="text-align: center">
+
+                        <aura:if isTrue="{!and(not(v.personExtras.IsFavorite__c), not(v.personExtras.IsHate__c))}">
+                            <lightning:button label="Add to favorites"
+                                              variant="success"
+                                              onclick="{!c.clickAddToFavoritesBtn}"/>
+                        </aura:if>
+
+                        <aura:if isTrue="{!and(v.personExtras.IsFavorite__c, not(v.personExtras.IsHate__c))}">
+                            <lightning:button label="Remove from favorites"
+                                              variant="success"
+                                              onclick="{!c.clickRemoveFromFavoritesBtn}"/>
+                        </aura:if>
+
+                        <aura:if isTrue="{!and(not(v.personExtras.IsHate__c), not(v.personExtras.IsFavorite__c))}">
+                            <lightning:button label="Hate this actor"
+                                              variant="destructive"
+                                              onclick="{!c.clickHateThisPersonBtn}"/>
+                        </aura:if>
+
+                        <aura:if isTrue="{!and(v.personExtras.IsHate__c, not(v.personExtras.IsFavorite__c))}">
+                            <lightning:button label="Remove from hated actors"
+                                              variant="destructive"
+                                              onclick="{!c.clickRemoveFromHatedPersonBtn}"/>
+                        </aura:if>
+                    </div>
+                </lightning:layoutItem>
+
+                <lightning:layoutItem flexibility="auto" size="6" padding="around-small">
+                    <div class="slds-text-heading_large slds-m-bottom--small">
+                            {!v.person.name}
+                    </div>
+
+                    <aura:if isTrue="{!v.personDetailsMore.deathday != null}">
+                        <div class="slds-text-title_caps slds-m-vertical--small">
+                            Also known as: {!v.personDetailsMore.also_known_as}
+                        </div>
+                    </aura:if>
+
+                    <div class="slds-text-title_caps slds-m-vertical--small">
+                        Birthday: {!v.personDetailsMore.birthday}
+                    </div>
+
+                    <aura:if isTrue="{!v.personDetailsMore.place_of_birth != null}">
+                        <div class="slds-text-title_caps slds-m-vertical--small">
+                            Birth place: {!v.personDetailsMore.place_of_birth}
+                        </div>
+                    </aura:if>
+
+                    <aura:if isTrue="{!v.personDetailsMore.deathday != null}">
+                        <div class="slds-text-title_caps slds-m-vertical--small">
+                            Deathday: {!v.personDetailsMore.deathday}
+                        </div>
+                    </aura:if>
+
+                    <aura:if isTrue="{!v.personDetailsMore.homepage != null}">
+                        <div class="slds-text-title_caps slds-m-vertical--small">
+                            Homepage: {!v.personDetailsMore.homepage}
+                        </div>
+                    </aura:if>
+
+                    <div class="slds-text-body_regular">
+                            {!v.personDetailsMore.biography}
+                    </div>
+                </lightning:layoutItem>
+
+                <div class="c-container">
+
+                    <div class="slds-text-title_caps slds-p-around_small">
+                        Known for movies
+                    </div>
+
+                    <lightning:layout verticalAlign="stretch"
+                                      horizontalAlign="center"
+                                      multipleRows="true">
+
+                        <aura:iteration items="{!v.personKnownFor.casts}"
+                                        var="knownFor">
+
+                            <lightning:layoutItem flexibility="auto" padding="around-small">
+
+                                <c:M_MovieSmallTile aura:id="movieTile"
+                                                    movieSmall="{!knownFor}"
+                                                    selected="{!knownFor.Id == v.selectedMovieId ? true : false}"/>
+                            </lightning:layoutItem>
+                        </aura:iteration>
+
+                    </lightning:layout>
+                </div>
+            </lightning:layout>
+        </lightning:card>
+    </aura:if>
+
+    <c:M_Spinner aura:id="spinner"/>
+</aura:component>

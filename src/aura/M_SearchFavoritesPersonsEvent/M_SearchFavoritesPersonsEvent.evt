@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="M_SearchFavoritesPersonsEvent">
+    <aura:attribute name="pageToSearch" type="Integer"/>
+</aura:event>

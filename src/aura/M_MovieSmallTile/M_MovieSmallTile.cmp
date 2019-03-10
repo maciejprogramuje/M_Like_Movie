@@ -1,0 +1,28 @@
+<aura:component description="M_MovieSmallTile"
+                implements="flexipage:availableForAllPageTypes">
+
+    <aura:attribute name="movieSmall" type="M_ResponsePerson.KnownFor" />
+    <aura:attribute name="selected" type="Boolean" default="false"/>
+
+    <aura:registerEvent name="selectedMovieSmallTileEvent"
+                        type="c:M_SelectedMovieSmallTileEvent"/>
+
+    <aura:handler name="init"
+                  action="{!c.onInit}"
+                  value="{!this}"/>
+
+    <lightning:button class="{!v.selected == false ? 'title selected' : 'title'}"
+                      onclick="{!c.clickTile}">
+
+        <div style="{!empty(v.movieSmall.poster_path) ? 'background-image:url(' + $Resource.actor_small + ')' : 'background-image:url(http://image.tmdb.org/t/p/w92/' + v.movieSmall.poster_path + ')'}"
+             class="innerTitle">
+
+            <div class="lower-third">
+                <h1>{!v.movieSmall.title}</h1>
+            </div>
+        </div>
+
+    </lightning:button>
+
+    <c:M_Spinner aura:id="spinner"/>
+</aura:component>

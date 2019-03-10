@@ -1,0 +1,396 @@
+<aura:component description="M_Details"
+                implements="flexipage:availableForAllPageTypes"
+                controller="M_Cast">
+
+    <aura:attribute name="movie" type="M_ResponseMovie.Results"/>
+    <aura:attribute name="movieCast" type="M_ResponseCast"/>
+    <aura:attribute name="movieExtras" type="MovieExtras__c"/>
+    <aura:attribute name="isVoteShown" type="Boolean"/>
+    <aura:attribute name="isOpenAddCommentDialog" type="Boolean"/>
+    <aura:attribute name="commentVal" type="String"/>
+    <aura:attribute name="comments" type="List"/>
+    <aura:attribute name="currentUserId" type="String"/>
+    <aura:attribute name="editCommentId" type="String"/>
+    <aura:attribute name="isOpenDeleteConfDialog" type="Boolean"/>
+    <aura:attribute name="deleteCommentId" type="String"/>
+
+
+    <aura:handler event="c:M_SelectedMovieTileEvent"
+                  action="{!c.clickedTile}"/>
+
+    <aura:handler event="c:M_ClearSearchEvent"
+                  action="{!c.handleClear}"/>
+
+    <aura:handler event="c:M_SelectedMovieSmallTileEvent"
+                  action="{!c.clickedTile}"/>
+
+    <aura:handler event="c:M_SelectedPersonTileEvent"
+                  action="{!c.handleClear}"/>
+
+    <aura:handler event="c:M_SelectedPersonSmallTileEvent"
+                  action="{!c.handleClear}"/>
+
+    <aura:if isTrue="{!not(empty(v.movie))}">
+        <lightning:card title="Movie's Details">
+
+            <lightning:layout multipleRows="true">
+
+                <lightning:layoutItem flexibility="auto" size="6" padding="around-small">
+
+                    <aura:if isTrue="{!or(v.movie.is_from_attachment == null, v.movie.is_from_attachment == false)}">
+                        <div class="imageView"
+                             style="{!empty(v.movie.poster_path) ? 'margin: 0 auto; background-image:url(' + $Resource.movie_big + ')' : 'margin: 0 auto; background-image:url(http://image.tmdb.org/t/p/w342/' + v.movie.poster_path + ')'}">
+                        </div>
+                    </aura:if>
+
+                    <aura:if isTrue="{!v.movie.is_from_attachment}">
+                        <img src="{!'/servlet/servlet.FileDownload?file=' + v.movie.poster_path}" style="object-fit: cover; width: 342px; height: 400px;"/>
+                    </aura:if>
+
+                    <div class="slds-m-around--small" style="text-align: center">
+
+                        <aura:if isTrue="{!and(not(v.movieExtras.IsFavorite__c), not(v.movieExtras.IsHate__c))}">
+                            <lightning:button label="Favorite"
+                                              class="slds-truncate btn"
+                                              variant="success"
+                                              onclick="{!c.clickAddToFavoritesBtn}"/>
+                        </aura:if>
+
+                        <aura:if isTrue="{!and(v.movieExtras.IsFavorite__c, not(v.movieExtras.IsHate__c))}">
+                            <lightning:button label="Un-favorite"
+                                              class="slds-truncate btn"
+                                              variant="success"
+                                              onclick="{!c.clickRemoveFromFavoritesBtn}"/>
+                        </aura:if>
+
+                        <aura:if isTrue="{!and(not(v.movieExtras.IsHate__c), not(v.movieExtras.IsFavorite__c))}">
+                            <lightning:button label="Hate"
+                                              class="slds-truncate btn"
+                                              variant="destructive"
+                                              onclick="{!c.clickHateThisMovieBtn}"/>
+                        </aura:if>
+
+                        <aura:if isTrue="{!and(v.movieExtras.IsHate__c, not(v.movieExtras.IsFavorite__c))}">
+                            <lightning:button label="Un-hate"
+                                              class="slds-truncate btn"
+                                              variant="destructive"
+                                              onclick="{!c.clickRemoveFromHatedMoviesBtn}"/>
+                        </aura:if>
+                    </div>
+
+                    <div style="text-align: center">
+                        <lightning:button label="Comment"
+                                          class="slds-truncate btn"
+                                          variant="neutral"
+                                          onclick="{!c.clickAddComment}"/>
+                    </div>
+                </lightning:layoutItem>
+
+                <lightning:layoutItem flexibility="auto" size="6" padding="around-small">
+                    <div class="slds-text-heading_large slds-m-bottom--small">
+                            {!v.movie.title}
+                    </div>
+
+                    <aura:if isTrue="{!v.movieExtras.All_Votes__c != null}">
+                        <div class="slds-text-title_caps slds-m-vertical--small">
+                            All visitors votes average: {!v.movieExtras.All_Votes__c}
+                        </div>
+                    </aura:if>
+
+                    <aura:if isTrue="{!v.movieExtras.All_Votes__c == null}">
+                        <div class="slds-text-title_caps slds-m-vertical--small">
+                            There is not any vote for this movie
+                        </div>
+                    </aura:if>
+
+                    <aura:if isTrue="{!or(v.movieExtras.All_Votes__c == null, v.movieExtras.All_Votes__c le 0)}">
+                        <aura:iteration items="1, 2, 3, 4, 5" var="">
+                            <lightning:icon iconName="utility:favorite"
+                                            class="slds-button slds-button_icon"
+                                            size="medium"/>
+                        </aura:iteration>
+                    </aura:if>
+
+                    <aura:if isTrue="{!and(v.movieExtras.All_Votes__c gt 0, v.movieExtras.All_Votes__c le 1.5)}">
+                        <aura:iteration items="1" var="">
+                            <lightning:icon iconName="utility:favorite"
+                                            class="slds-button slds-button_icon"
+                                            size="medium"
+                                            variant="warning"/>
+                        </aura:iteration>
+
+                        <aura:iteration items="1, 2, 3, 4" var="">
+                            <lightning:icon iconName="utility:favorite"
+                                            class="slds-button slds-button_icon"
+                                            size="medium"/>
+                        </aura:iteration>
+                    </aura:if>
+
+                    <aura:if isTrue="{!and(v.movieExtras.All_Votes__c gt 1.5, v.movieExtras.All_Votes__c le 2.5)}">
+                        <aura:iteration items="1, 2" var="">
+                            <lightning:icon iconName="utility:favorite"
+                                            class="slds-button slds-button_icon"
+                                            size="medium"
+                                            variant="warning"/>
+                        </aura:iteration>
+
+                        <aura:iteration items="1, 2, 3" var="">
+                            <lightning:icon iconName="utility:favorite"
+                                            class="slds-button slds-button_icon"
+                                            size="medium"/>
+                        </aura:iteration>
+                    </aura:if>
+
+                    <aura:if isTrue="{!and(v.movieExtras.All_Votes__c gt 2.5, v.movieExtras.All_Votes__c le 3.5)}">
+                        <aura:iteration items="1, 2, 3" var="">
+                            <lightning:icon iconName="utility:favorite"
+                                            class="slds-button slds-button_icon"
+                                            size="medium"
+                                            variant="warning"/>
+                        </aura:iteration>
+
+                        <aura:iteration items="1, 2" var="">
+                            <lightning:icon iconName="utility:favorite"
+                                            class="slds-button slds-button_icon"
+                                            size="medium"/>
+                        </aura:iteration>
+                    </aura:if>
+
+                    <aura:if isTrue="{!and(v.movieExtras.All_Votes__c gt 3.5, v.movieExtras.All_Votes__c le 4.5)}">
+                        <aura:iteration items="1, 2, 3, 4" var="">
+                            <lightning:icon iconName="utility:favorite"
+                                            class="slds-button slds-button_icon"
+                                            size="medium"
+                                            variant="warning"/>
+                        </aura:iteration>
+
+                        <aura:iteration items="1" var="">
+                            <lightning:icon iconName="utility:favorite"
+                                            class="slds-button slds-button_icon"
+                                            size="medium"/>
+                        </aura:iteration>
+                    </aura:if>
+
+                    <aura:if isTrue="{!and(v.movieExtras.All_Votes__c gt 4.5, v.movieExtras.All_Votes__c le 5)}">
+                        <aura:iteration items="1, 2, 3, 4, 5" var="">
+                            <lightning:icon iconName="utility:favorite"
+                                            class="slds-button slds-button_icon"
+                                            size="medium"
+                                            variant="warning"/>
+                        </aura:iteration>
+                    </aura:if>
+
+
+                    <aura:if isTrue="{!v.isVoteShown}">
+                        <div class="slds-text-title_caps slds-m-vertical--small">
+                            Make Your vote
+                        </div>
+
+                        <div>
+                            <button onclick="{!c.clickVote1}"
+                                    class="slds-button slds-button_icon overButton"
+                                    title="Vote one star">
+                                <aura:iteration items="1" var="">
+                                    <lightning:icon iconName="utility:favorite"
+                                                    size="xx-small"/>
+                                </aura:iteration>
+                                <span class="slds-assistive-text">Vote one star</span>
+                            </button>
+                        </div>
+
+                        <div>
+                            <button onclick="{!c.clickVote2}"
+                                    class="slds-button slds-button_icon overButton"
+                                    title="Vote two stars">
+                                <aura:iteration items="1, 2" var="">
+                                    <lightning:icon iconName="utility:favorite"
+                                                    size="xx-small"/>
+                                </aura:iteration>
+                                <span class="slds-assistive-text">Vote two stars</span>
+                            </button>
+                        </div>
+
+                        <div>
+                            <button onclick="{!c.clickVote3}"
+                                    class="slds-button slds-button_icon overButton"
+                                    title="Vote three stars">
+                                <aura:iteration items="1, 2, 3" var="">
+                                    <lightning:icon iconName="utility:favorite"
+                                                    size="xx-small"/>
+                                </aura:iteration>
+                                <span class="slds-assistive-text">Vote three stars</span>
+                            </button>
+                        </div>
+
+                        <div>
+                            <button onclick="{!c.clickVote4}"
+                                    class="slds-button slds-button_icon overButton"
+                                    title="Vote four stars">
+                                <aura:iteration items="1, 2, 3, 4" var="">
+                                    <lightning:icon iconName="utility:favorite"
+                                                    size="xx-small"/>
+                                </aura:iteration>
+                                <span class="slds-assistive-text">Vote four stars</span>
+                            </button>
+                        </div>
+
+                        <div>
+                            <button onclick="{!c.clickVote5}"
+                                    class="slds-button slds-button_icon overButton"
+                                    title="Vote five stars">
+                                <aura:iteration items="1, 2, 3, 4, 5" var="">
+                                    <lightning:icon iconName="utility:favorite"
+                                                    size="xx-small"/>
+                                </aura:iteration>
+                                <span class="slds-assistive-text">Vote five stars</span>
+                            </button>
+                        </div>
+                    </aura:if>
+
+                    <div class="slds-text-title_caps slds-m-vertical--small">
+                        Original title: {!v.movie.original_title}
+                    </div>
+
+                    <div class="slds-text-title_caps slds-m-bottom--small">
+                        Release date: {!v.movie.release_date}
+                    </div>
+
+                    <div class="slds-text-body_regular">
+                        {!v.movie.overview}
+                    </div>
+                </lightning:layoutItem>
+
+
+                <aura:if isTrue="{!not(v.movie.is_from_attachment)}">
+                    <div class="c-container">
+
+                        <div class="slds-text-heading_small slds-p-around_small">
+                            Movie's Cast
+                        </div>
+
+                        <lightning:layout verticalAlign="stretch"
+                                          horizontalAlign="center"
+                                          multipleRows="true">
+
+                            <aura:iteration items="{!v.movieCast.casts}"
+                                            var="cast">
+
+                                <lightning:layoutItem flexibility="auto" padding="around-small">
+
+                                    <c:M_PersonSmallTile aura:id="actorTile"
+                                                         personSmall="{!cast}"
+                                                         selected="{!cast.Id == v.selectedActorId ? true : false}"/>
+                                </lightning:layoutItem>
+                            </aura:iteration>
+                        </lightning:layout>
+                    </div>
+                </aura:if>
+
+
+                <aura:if isTrue="{!not(empty(v.comments))}">
+
+                    <div class="slds-text-heading_small slds-p-around_small">
+                        Comments for movie
+                    </div>
+
+                    <aura:iteration items="{!v.comments}"
+                                    var="comm">
+
+                        <div class="slds-box slds-m-around--small" style="width: 100%;">
+
+                            <lightning:layoutItem>
+                                <span class="slds-text-title_caps slds-m-bottom--small"
+                                      style="float: left;">Author: {!comm.User_Name__c}</span>
+
+                                <span style="float: right;">
+                                        <lightning:formattedDateTime value="{!comm.LastModifiedDate}"
+                                                                     year="numeric" month="short" day="numeric"
+                                                                     hour="2-digit" minute="2-digit"/>
+                                </span>
+
+                                <ui:outputRichText class="slds-text-longform slds-text-body_regular clear_both"
+                                                   value="{!comm.Comment__c}"/>
+
+                                <aura:if isTrue="{!comm.LastModifiedById == v.currentUserId}">
+                                    <div style="text-align: right">
+                                        <lightning:button label="Edit"
+                                                          class="slds-truncate"
+                                                          value="{!comm.Id}"
+                                                          variant="neutral"
+                                                          onclick="{!c.clickEditComment}"/>
+
+                                        <lightning:button label="Delete"
+                                                          class="slds-truncate slds-button--destructive"
+                                                          value="{!comm.Id}"
+                                                          onclick="{!c.clickDeleteComment}"/>
+                                    </div>
+                                </aura:if>
+                            </lightning:layoutItem>
+                        </div>
+                    </aura:iteration>
+                </aura:if>
+            </lightning:layout>
+        </lightning:card>
+    </aura:if>
+
+    <aura:if isTrue="{!v.isOpenAddCommentDialog}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                 aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+
+                <header class="slds-modal__header">
+                    <h1>Add Your comment for movie</h1>
+                </header>
+
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning:inputRichText value="{!v.commentVal}"
+                                             placeholder="Enter here Your opinion about movie"/>
+                </div>
+
+                <footer class="slds-modal__footer">
+
+                    <lightning:button variant="neutral"
+                                      label="Cancel"
+                                      onclick="{!c.closeAddCommentDialog}"/>
+
+                    <lightning:button variant="brand"
+                                      label="Add Comment"
+                                      onclick="{!c.saveAddCommentDialog}"/>
+                </footer>
+            </div>
+        </section>
+
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+
+    <aura:if isTrue="{!v.isOpenDeleteConfDialog}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                 aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+
+                <header class="slds-modal__header">
+                    <h1>Delete comment</h1>
+                </header>
+
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <h1>Are You sure?</h1>
+                </div>
+
+                <footer class="slds-modal__footer">
+
+                    <lightning:button variant="neutral"
+                                      label="Cancel"
+                                      onclick="{!c.closeDeleteConfDialog}"/>
+
+                    <lightning:button variant="destructive"
+                                      label="Delete"
+                                      onclick="{!c.acceptDeleteConfDialog}"/>
+                </footer>
+            </div>
+        </section>
+
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+
+    <c:M_Spinner aura:id="spinner"/>
+</aura:component>

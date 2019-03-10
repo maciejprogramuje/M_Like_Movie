@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="M_SelectedPersonTileEvent">
+    <aura:attribute name="person" type="M_ResponsePerson.Result"/>
+</aura:event>

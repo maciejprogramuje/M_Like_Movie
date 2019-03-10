@@ -1,0 +1,24 @@
+<aura:component description="M_PersonTile"
+                implements="flexipage:availableForAllPageTypes">
+
+    <aura:attribute name="person" type="M_ResponsePerson.Result" />
+    <aura:attribute name="selected" type="Boolean" default="false"/>
+
+    <aura:registerEvent name="selectedPersonTileEvent"
+                        type="c:M_SelectedPersonTileEvent"/>
+
+    <lightning:button class="{!v.selected == false ? 'title selected' : 'title'}"
+                      onclick="{!c.clickTile}">
+
+        <div style="{!empty(v.person.profile_path) ? 'background-image:url(' + $Resource.actor_small + ')' : 'background-image:url(http://image.tmdb.org/t/p/w185/' + v.person.profile_path + ')'}"
+             class="innerTitle">
+
+            <div class="lower-third">
+                <h1>{!v.person.name}</h1>
+            </div>
+        </div>
+
+    </lightning:button>
+
+    <c:M_Spinner aura:id="spinner"/>
+</aura:component>

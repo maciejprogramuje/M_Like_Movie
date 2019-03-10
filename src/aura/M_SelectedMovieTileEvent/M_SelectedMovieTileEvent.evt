@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="M_SelectedMovieTileEvent">
+    <aura:attribute name="movie" type="M_ResponseMovie.Results"/>
+</aura:event>

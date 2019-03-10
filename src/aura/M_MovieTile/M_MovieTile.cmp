@@ -1,0 +1,98 @@
+<aura:component description="M_MovieTile"
+                implements="flexipage:availableForAllPageTypes">
+
+    <aura:attribute name="movie" type="M_ResponseMovie.Results" />
+    <aura:attribute name="selected" type="Boolean" default="false"/>
+    <aura:attribute name="isHated" type="Boolean" default="false"/>
+    <aura:attribute name="isFavorite" type="Boolean" default="false"/>
+
+
+    <aura:attribute name="isFromAttachment" type="Boolean" default="false"/>
+
+
+
+    <aura:registerEvent name="selectedMovieTileEvent"
+                        type="c:M_SelectedMovieTileEvent"/>
+
+    <lightning:button class="{!v.selected == false ? 'title selected' : 'title'}"
+                      onclick="{!c.clickTile}">
+
+        <aura:if isTrue="{!and(or(v.isHated == null, v.isHated == false), or(v.isFavorite == null, v.isFavorite == false))}">
+            <aura:if isTrue="{!or(v.isFromAttachment == null, v.isFromAttachment == false)}">
+                <div style="{!empty(v.movie.poster_path) ? 'background-image:url(' + $Resource.movie_small + ')' : 'background-image:url(http://image.tmdb.org/t/p/w185/' + v.movie.poster_path + ')'}"
+                     class="innerTitle">
+
+                    <div class="lower-third">
+                        <h1>{!v.movie.title}</h1>
+                    </div>
+                </div>
+            </aura:if>
+
+            <aura:if isTrue="{!v.isFromAttachment}">
+                <div style="position: relative; top: 0; left: 0; width: 181px; height: 181px;">
+                    <img src="{!'/servlet/servlet.FileDownload?file=' + v.movie.poster_path}" style="object-fit: cover; width: 181px; height: 181px;"/>
+
+                    <div style="color: #FFFFFF; background-color: rgba(0, 0, 0, .4); position: absolute; top: 0; left: 0; width: 100%;">
+                        <h1>{!v.movie.title}</h1>
+                    </div>
+                </div>
+            </aura:if>
+
+        </aura:if>
+
+        <aura:if isTrue="{!v.isFavorite}">
+            <aura:if isTrue="{!or(v.isFromAttachment == null, v.isFromAttachment == false)}">
+                <div style="position: relative; top: 0; left: 0;">
+                    <div style="{!empty(v.movie.poster_path) ? 'background-image:url(' + $Resource.movie_small + '); width: 181px; height: 181px; object-fit: cover; position: relative; top: 0; left: 0;' : 'background-image:url(http://image.tmdb.org/t/p/w185/' + v.movie.poster_path + '); width: 181px; height: 181px; object-fit: cover; position: relative; top: 0; left: 0;'}"></div>
+
+                    <img src="{!$Resource.M_thumb_up}" style="position: absolute; top: 0; left: 0;"/>
+
+                    <div style="color: #FFFFFF; background-color: rgba(0, 0, 0, .4); position: absolute; top: 0; left: 0; width: 100%;">
+                        <h1>{!v.movie.title}</h1>
+                    </div>
+                </div>
+            </aura:if>
+
+            <aura:if isTrue="{!v.isFromAttachment}">
+                <div style="position: relative; top: 0; left: 0; width: 181px; height: 181px;">
+                    <img src="{!'/servlet/servlet.FileDownload?file=' + v.movie.poster_path}" style="object-fit: cover; width: 181px; height: 181px;"/>
+
+                    <img src="{!$Resource.M_thumb_up}" style="position: absolute; top: 0; left: 0;"/>
+
+                    <div style="color: #FFFFFF; background-color: rgba(0, 0, 0, .4); position: absolute; top: 0; left: 0; width: 100%;">
+                        <h1>{!v.movie.title}</h1>
+                    </div>
+                </div>
+            </aura:if>
+        </aura:if>
+
+        <aura:if isTrue="{!v.isHated}">
+            <aura:if isTrue="{!or(v.isFromAttachment == null, v.isFromAttachment == false)}">
+                <div style="position: relative; top: 0; left: 0;">
+                    <div style="{!empty(v.movie.poster_path) ? 'background-image:url(' + $Resource.movie_small + '); width: 181px; height: 181px; object-fit: cover; position: relative; top: 0; left: 0;' : 'background-image:url(http://image.tmdb.org/t/p/w185/' + v.movie.poster_path + '); width: 181px; height: 181px; object-fit: cover; position: relative; top: 0; left: 0;'}"></div>
+
+                    <img src="{!$Resource.M_thumb_down}" style="position: absolute; top: 0; left: 0;"/>
+
+                    <div style="color: #FFFFFF; background-color: rgba(0, 0, 0, .4); position: absolute; top: 0; left: 0; width: 100%;">
+                        <h1>{!v.movie.title}</h1>
+                    </div>
+                </div>
+            </aura:if>
+
+            <aura:if isTrue="{!v.isFromAttachment}">
+                <div style="position: relative; top: 0; left: 0; width: 181px; height: 181px;">
+                    <img src="{!'/servlet/servlet.FileDownload?file=' + v.movie.poster_path}" style="object-fit: cover; width: 181px; height: 181px;"/>
+
+                    <img src="{!$Resource.M_thumb_down}" style="position: absolute; top: 0; left: 0;"/>
+
+                    <div style="color: #FFFFFF; background-color: rgba(0, 0, 0, .4); position: absolute; top: 0; left: 0; width: 100%;">
+                        <h1>{!v.movie.title}</h1>
+                    </div>
+                </div>
+            </aura:if>
+        </aura:if>
+
+    </lightning:button>
+
+    <c:M_Spinner aura:id="spinner"/>
+</aura:component>

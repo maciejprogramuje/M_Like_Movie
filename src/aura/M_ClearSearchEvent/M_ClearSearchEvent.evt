@@ -1,0 +1,2 @@
+<aura:event type="APPLICATION" description="M_ClearSearchEvent">
+</aura:event>

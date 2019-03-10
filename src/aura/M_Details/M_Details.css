@@ -1,0 +1,20 @@
+.THIS .imageView {
+    border: 1px solid rgb(221, 219, 218);
+    background-repeat: no-repeat;
+    width: 342px;
+    height: 400px;
+    margin: 2px;
+}
+
+.THIS .overButton:hover svg {
+    fill: rgb(255, 183, 92);
+}
+
+.THIS .btn {
+    width: 9rem;
+}
+
+.THIS .clear_both {
+    clear: both;
+}
+

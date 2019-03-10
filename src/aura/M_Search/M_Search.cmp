@@ -1,0 +1,120 @@
+<aura:component description="M_Search"
+                implements="flexipage:availableForAllPageTypes">
+
+    <aura:attribute name="title" type="String"/>
+    <aura:attribute name="person" type="String"/>
+
+    <aura:registerEvent name="searchEvent"
+                        type="c:M_SearchEvent"/>
+
+    <aura:registerEvent name="searchPersonEvent"
+                        type="c:M_SearchPersonEvent"/>
+
+    <aura:registerEvent name="clearSearchEvent"
+                        type="c:M_ClearSearchEvent"/>
+
+    <aura:registerEvent name="searchFavoritesEvent"
+                        type="c:M_SearchFavoritesEvent"/>
+
+    <aura:registerEvent name="searchHatedEvent"
+                        type="c:M_SearchHatedEvent"/>
+
+    <aura:registerEvent name="searchFavoritesPersonsEvent"
+                        type="c:M_SearchFavoritesEvent"/>
+
+    <aura:registerEvent name="searchHatedPersonsEvent"
+                        type="c:M_SearchHatedEvent"/>
+
+    <lightning:card title="Search movies or actors">
+        <div class="slds-m-horizontal--small">
+
+            <lightning:tabset selectedTabId="searchMoviesTab">
+
+                <lightning:tab label="Movies" id="searchMoviesTab">
+                    <fieldset class="slds-theme--default">
+                        <form class="slds-form--stacked">
+
+                            <lightning:input aura:id="searchForm"
+                                             label="Enter Movie Title"
+                                             name="searchmovie"
+                                             value="{!v.title}"
+                                             placeholder="Movie title"/>
+
+                            <div style="text-align: center;">
+
+                                <lightning:button label="Search"
+                                                  class="slds-m-top--medium btn"
+                                                  variant="brand"
+                                                  onclick="{!c.clickSearch}"/>
+
+                                <lightning:button label="Clear"
+                                                  class="slds-m-top--medium btn"
+                                                  variant="neutral"
+                                                  onclick="{!c.clickClear}"/>
+                            </div>
+                        </form>
+                    </fieldset>
+                </lightning:tab>
+
+                <lightning:tab label="Actors" id="searchActorsTab">
+                    <fieldset class="slds-theme--default">
+                        <form class="slds-form--stacked">
+
+                            <lightning:input aura:id="searchPersonForm"
+                                             label="Enter Actor Name"
+                                             name="searchperson"
+                                             value="{!v.person}"
+                                             placeholder="Actor name"/>
+
+                            <div style="text-align: center;">
+
+                                <lightning:button label="Search"
+                                                  class="slds-m-top--medium btn"
+                                                  variant="brand"
+                                                  onclick="{!c.clickSearchPerson}"/>
+
+                                <lightning:button label="Clear"
+                                                  class="slds-m-top--medium btn"
+                                                  variant="neutral"
+                                                  onclick="{!c.clickClear}"/>
+                            </div>
+                        </form>
+                    </fieldset>
+                </lightning:tab>
+
+                <lightning:tab label="Favorites" id="searchFavoritesTab">
+                    <div class="slds-m-top--small" style="text-align: center;">
+
+                        <lightning:button label="Show all favorites movies"
+                                          class="btn"
+                                          variant="success"
+                                          onclick="{!c.clickAllFavorites}"/>
+
+                        <lightning:button label="Show all favorites actors"
+                                          class="btn"
+                                          variant="success"
+                                          onclick="{!c.clickAllFavoritesPersons}"/>
+                    </div>
+                </lightning:tab>
+
+                <lightning:tab label="Hated" id="searchHatedTab">
+                    <div class="slds-m-top--small" style="text-align: center;">
+
+                        <lightning:button label="Show all hated movies"
+                                          class="slds-m-left--small btn"
+                                          variant="destructive"
+                                          onclick="{!c.clickAllHated}"/>
+
+                        <lightning:button label="Show all hated actors"
+                                          class="slds-m-left--small btn"
+                                          variant="destructive"
+                                          onclick="{!c.clickAllHatedPersons}"/>
+                    </div>
+                </lightning:tab>
+
+            </lightning:tabset>
+        </div>
+    </lightning:card>
+
+    <c:M_Spinner aura:id="spinner"/>
+</aura:component>

@@ -1,0 +1,173 @@
+<aura:component description="M_Results"
+                implements="flexipage:availableForAllPageTypes"
+                controller="M_Results">
+
+    <aura:attribute name="title" type="String"/>
+    <aura:attribute name="page" type="Integer"/>
+    <aura:attribute name="responseMovie" type="M_ResponseMovie"/>
+    <aura:attribute name="selectedMovieId" type="String"/>
+    <aura:attribute name="isShowAddMovieDialog" type="Boolean"/>
+    <aura:attribute name="addTitle" type="String"/>
+    <aura:attribute name="addOriginalTitle" type="String"/>
+    <aura:attribute name="addReleaseDate" type="String"/>
+    <aura:attribute name="addOverview" type="String"/>
+    <aura:attribute name="isShowAddPosterDialog" type="Boolean"/>
+    <aura:attribute name="parentId" type="String"/>
+
+    <aura:handler event="c:M_SearchEvent"
+                  action="{!c.handleSearch}"/>
+
+    <aura:handler event="c:M_ClearSearchEvent"
+                  action="{!c.handleClear}"/>
+
+    <aura:handler event="c:M_SearchFavoritesEvent"
+                  action="{!c.handleClear}"/>
+
+    <aura:handler event="c:M_SearchHatedEvent"
+                  action="{!c.handleClear}"/>
+
+    <aura:handler event="c:M_SearchFavoritesPersonsEvent"
+                  action="{!c.handleClear}"/>
+
+    <aura:handler event="c:M_SearchHatedPersonsEvent"
+                  action="{!c.handleClear}"/>
+
+    <aura:handler event="c:M_CloseAddPosterEvent"
+                  action="{!c.handleCloseAddPoster}"/>
+
+    <aura:if isTrue="{!not(empty(v.responseMovie))}">
+        <lightning:card title="Search movie results">
+            <aura:set attribute="actions">
+                <lightning:button label="Add movie"
+                                  onclick="{!c.openAddMovieDialog}"/>
+            </aura:set>
+
+            <div style="text-align: center;">
+                <fieldset class="slds-theme--default">
+                    <form class="slds-form--stacked">
+
+                        <lightning:button label="Previous page"
+                                          class="btn"
+                                          variant="brand"
+                                          onclick="{!c.clickPreviousPage}"
+                                          disabled="{!not(and((v.page gt 1), (not(empty(v.responseMovie)))))}"/>
+
+                        <aura:if isTrue="{!not(empty(v.responseMovie))}">
+                            <span class="slds-text-body_regular slds-m-around_medium slds-p-top--medium">
+                                {!v.page}/{!v.responseMovie.total_pages}
+                            </span>
+                        </aura:if>
+
+                        <lightning:button label="Next page"
+                                          class="btn"
+                                          variant="brand"
+                                          onclick="{!c.clickNextPage}"
+                                          disabled="{!not(v.page lt v.responseMovie.total_pages)}"/>
+                    </form>
+                </fieldset>
+            </div>
+
+            <div class="c-container">
+                <lightning:layout verticalAlign="stretch"
+                                  horizontalAlign="center"
+                                  multipleRows="true">
+
+                    <aura:if isTrue="{!empty(v.responseMovie)}">
+                        <div class="slds-align_absolute-center">
+                            No movies found
+                        </div>
+                    </aura:if>
+
+                    <aura:if isTrue="{!not(empty(v.responseMovie))}">
+                        <aura:iteration items="{!v.responseMovie.results}"
+                                        var="result">
+
+                            <lightning:layoutItem flexibility="auto" padding="around-small">
+
+                                <c:M_MovieTile aura:id="movieTile"
+                                               movie="{!result}"
+                                               isHated="{!result.is_hated}"
+                                               isFavorite="{!result.is_favorite}"
+                                               selected="{!result.Id == v.selectedMovieId ? true : false}"
+                                               isFromAttachment="{!result.is_from_attachment}"/>
+                            </lightning:layoutItem>
+                        </aura:iteration>
+                    </aura:if>
+                </lightning:layout>
+            </div>
+        </lightning:card>
+    </aura:if>
+
+    <aura:if isTrue="{!v.isShowAddMovieDialog}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                 aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+
+                <header class="slds-modal__header">
+                    <h1>Add movie to base</h1>
+                </header>
+
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <h1>Movie details</h1>
+
+                    <lightning:input aura:id="addTitleForm"
+                                     label="Title"
+                                     name="add_title_movie"
+                                     value="{!v.addTitle}"
+                                     required="true"
+                                     placeholder="Title"/>
+
+                    <lightning:input aura:id="addOriginalTitleForm"
+                                     label="Original Title"
+                                     name="add_original_title_movie"
+                                     value="{!v.addOriginalTitle}"
+                                     placeholder="Original Title"/>
+
+                    <lightning:input aura:id="addReleaseDateForm"
+                                     type="date"
+                                     label="Release Date"
+                                     name="add_release_date_movie"
+                                     value="{!v.addReleaseDate}"
+                                     placeholder="Release Date"/>
+
+                    <lightning:input aura:id="addOverviewForm"
+                                     label="Overview"
+                                     name="add_overview_movie"
+                                     value="{!v.addOverview}"
+                                     placeholder="Overview"/>
+                </div>
+
+                <footer class="slds-modal__footer">
+
+                    <lightning:button variant="neutral"
+                                      label="Cancel"
+                                      onclick="{!c.closeAddMovieDialog}"/>
+
+                    <lightning:button variant="brand"
+                                      label="Add movie"
+                                      onclick="{!c.acceptAddMovieDialog}"/>
+                </footer>
+            </div>
+        </section>
+
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+
+    <aura:if isTrue="{!v.isShowAddPosterDialog}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                 aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h1>Add movie's poster</h1>
+                    <h1>Only JPG, PNG, GIF file format allowed</h1>
+                </header>
+
+                <c:M_FileUpload parentId="{!v.parentId}"/>
+            </div>
+        </section>
+
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+
+    <c:M_Spinner aura:id="spinner"/>
+</aura:component>

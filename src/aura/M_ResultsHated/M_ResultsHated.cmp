@@ -1,0 +1,91 @@
+<aura:component description="M_ResultsHated"
+                implements="flexipage:availableForAllPageTypes"
+                controller="M_ResultsHated">
+
+    <aura:attribute name="page" type="Integer"/>
+    <aura:attribute name="responseMovie" type="M_ResponseMovie"/>
+    <aura:attribute name="selectedMovieId" type="String"/>
+
+    <aura:handler event="c:M_SearchHatedEvent"
+                  action="{!c.handleSearch}"/>
+
+    <aura:handler event="c:M_SearchEvent"
+                  action="{!c.handleClear}"/>
+
+    <aura:handler event="c:M_ClearSearchEvent"
+                  action="{!c.handleClear}"/>
+
+    <aura:handler event="c:M_SearchFavoritesEvent"
+                  action="{!c.handleClear}"/>
+
+    <aura:handler event="c:M_SearchFavoritesPersonsEvent"
+                  action="{!c.handleClear}"/>
+
+    <aura:handler event="c:M_SearchHatedPersonsEvent"
+                  action="{!c.handleClear}"/>
+
+    <aura:if isTrue="{!not(empty(v.responseMovie))}">
+        <lightning:card title="Your hated movies">
+
+            <div style="text-align: center;">
+                <fieldset class="slds-theme--default">
+                    <form class="slds-form--stacked">
+
+                        <lightning:button label="Previous page"
+                                          class="btn"
+                                          variant="brand"
+                                          onclick="{!c.clickPreviousPage}"
+                                          disabled="{!not(and((v.page gt 1), (not(empty(v.responseMovie)))))}"/>
+
+                        <aura:if isTrue="{!not(empty(v.responseMovie))}">
+                            <span class="slds-text-body_regular slds-m-around_medium slds-p-top--medium">
+                                {!v.page}/{!v.responseMovie.total_pages}
+                            </span>
+                        </aura:if>
+
+                        <lightning:button label="Next page"
+                                          class="btn"
+                                          variant="brand"
+                                          onclick="{!c.clickNextPage}"
+                                          disabled="{!not(v.page lt v.responseMovie.total_pages)}"/>
+                    </form>
+                </fieldset>
+            </div>
+
+            <div class="c-container">
+                <lightning:layout verticalAlign="stretch"
+                                  horizontalAlign="center"
+                                  multipleRows="true">
+
+                    <aura:if isTrue="{!empty(v.responseMovie)}">
+                        <div class="slds-align_absolute-center">
+                            No movies found
+                        </div>
+                    </aura:if>
+
+                    <aura:if isTrue="{!not(empty(v.responseMovie))}">
+                        <aura:iteration items="{!v.responseMovie.results}"
+                                        var="result"
+                                        indexVar="movieIndex">
+
+                            <aura:if isTrue="{!and(movieIndex ge ((v.page - 1) * 20), movieIndex le ((v.page - 1) * 20 + 19))}">
+
+                                <lightning:layoutItem flexibility="auto" padding="around-small">
+
+                                    <c:M_MovieTile aura:id="movieTile"
+                                                   movie="{!result}"
+                                                   isHated="{!result.is_hated}"
+                                                   isFavorite="{!result.is_favorite}"
+                                                   selected="{!result.Id == v.selectedMovieId ? true : false}"
+                                                   isFromAttachment="{!result.is_from_attachment}"/>
+                                </lightning:layoutItem>
+                            </aura:if>
+                        </aura:iteration>
+                    </aura:if>
+                </lightning:layout>
+            </div>
+        </lightning:card>
+    </aura:if>
+
+    <c:M_Spinner aura:id="spinner"/>
+</aura:component>
