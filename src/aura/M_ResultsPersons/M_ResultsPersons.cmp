@@ -69,15 +69,14 @@
                     <aura:iteration items="{!v.responsePerson.results}"
                                     var="result">
 
-                        <aura:if isTrue="{!not(result.is_hated)}">
+                        <lightning:layoutItem flexibility="auto" padding="around-small">
 
-                            <lightning:layoutItem flexibility="auto" padding="around-small">
-
-                                <c:M_PersonTile aura:id="personTile"
-                                                person="{!result}"
-                                                selected="{!result.Id == v.selectedPersonId ? true : false}"/>
-                            </lightning:layoutItem>
-                        </aura:if>
+                            <c:M_PersonTile aura:id="personTile"
+                                            person="{!result}"
+                                            isHated="{!result.is_hated}"
+                                            isFavorite="{!result.is_favorite}"
+                                            selected="{!result.Id == v.selectedPersonId ? true : false}"/>
+                        </lightning:layoutItem>
                     </aura:iteration>
                 </aura:if>
             </lightning:layout>

@@ -57,5 +57,7 @@ global class M_ResponsePerson {
 
         @AuraEnabled
         public Boolean is_hated { get; set; }
+        @AuraEnabled
+        public Boolean is_favorite { get; set; }
     }
 }

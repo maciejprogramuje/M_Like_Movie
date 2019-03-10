@@ -3,6 +3,8 @@
 
     <aura:attribute name="person" type="M_ResponsePerson.Result" />
     <aura:attribute name="selected" type="Boolean" default="false"/>
+    <aura:attribute name="isHated" type="Boolean" default="false"/>
+    <aura:attribute name="isFavorite" type="Boolean" default="false"/>
 
     <aura:registerEvent name="selectedPersonTileEvent"
                         type="c:M_SelectedPersonTileEvent"/>
@@ -10,14 +12,39 @@
     <lightning:button class="{!v.selected == false ? 'title selected' : 'title'}"
                       onclick="{!c.clickTile}">
 
-        <div style="{!empty(v.person.profile_path) ? 'background-image:url(' + $Resource.actor_small + ')' : 'background-image:url(http://image.tmdb.org/t/p/w185/' + v.person.profile_path + ')'}"
-             class="innerTitle">
+        <aura:if isTrue="{!and(or(v.isHated == null, v.isHated == false), or(v.isFavorite == null, v.isFavorite == false))}">
+            <div style="{!empty(v.person.profile_path) ? 'background-image:url(' + $Resource.actor_small + ')' : 'background-image:url(http://image.tmdb.org/t/p/w185/' + v.person.profile_path + ')'}"
+                 class="innerTitle">
 
-            <div class="lower-third">
-                <h1>{!v.person.name}</h1>
+                <div class="lower-third">
+                    <h1>{!v.person.name}</h1>
+                </div>
             </div>
-        </div>
+        </aura:if>
 
+        <aura:if isTrue="{!v.isFavorite}">
+            <div style="position: relative; top: 0; left: 0;">
+                <div style="{!empty(v.person.profile_path) ? 'background-image:url(' + $Resource.actor_small + '); width: 181px; height: 181px; object-fit: cover; position: relative; top: 0; left: 0;' : 'background-image:url(http://image.tmdb.org/t/p/w185/' + v.person.profile_path + '); width: 181px; height: 181px; object-fit: cover; position: relative; top: 0; left: 0;'}"></div>
+
+                <img src="{!$Resource.M_thumb_up}" style="position: absolute; top: 0; left: 0;"/>
+
+                <div style="color: #FFFFFF; background-color: rgba(0, 0, 0, .4); position: absolute; top: 0; left: 0; width: 100%;">
+                    <h1>{!v.person.name}</h1>
+                </div>
+            </div>
+        </aura:if>
+
+        <aura:if isTrue="{!v.isHated}">
+            <div style="position: relative; top: 0; left: 0;">
+                <div style="{!empty(v.person.profile_path) ? 'background-image:url(' + $Resource.actor_small + '); width: 181px; height: 181px; object-fit: cover; position: relative; top: 0; left: 0;' : 'background-image:url(http://image.tmdb.org/t/p/w185/' + v.person.profile_path + '); width: 181px; height: 181px; object-fit: cover; position: relative; top: 0; left: 0;'}"></div>
+
+                <img src="{!$Resource.M_thumb_down}" style="position: absolute; top: 0; left: 0;"/>
+
+                <div style="color: #FFFFFF; background-color: rgba(0, 0, 0, .4); position: absolute; top: 0; left: 0; width: 100%;">
+                    <h1>{!v.person.name}</h1>
+                </div>
+            </div>
+        </aura:if>
     </lightning:button>
 
     <c:M_Spinner aura:id="spinner"/>

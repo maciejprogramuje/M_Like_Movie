@@ -24,6 +24,7 @@ public with sharing class M_ResultsPersons {
             M_ResponsePerson responsePerson = (M_ResponsePerson) JSON.deserialize(res.getBody(), M_ResponsePerson.class);
 
             assignHated(responsePerson);
+            assignFavorite(responsePerson);
 
             return responsePerson;
         } catch (system.CalloutException e) {
@@ -45,4 +46,19 @@ public with sharing class M_ResultsPersons {
             }
         }
     }
+
+    private static void assignFavorite(M_ResponsePerson respPerson) {
+        List<Person_Extras__c> hatedPersons = [SELECT Id, IdPerson__c FROM Person_Extras__c WHERE IsFavorite__c = TRUE];
+
+        for(Person_Extras__c hatedPerson : hatedPersons) {
+            for(M_ResponsePerson.Result result : respPerson.results) {
+                if (String.valueOf(result.id).equals(hatedPerson.IdPerson__c))  {
+                    result.is_favorite = true;
+                    break;
+                }
+            }
+        }
+    }
+
+
 }
