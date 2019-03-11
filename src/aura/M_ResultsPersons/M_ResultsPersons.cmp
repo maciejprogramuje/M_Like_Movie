@@ -33,6 +33,7 @@
 
     <aura:if isTrue="{!not(empty(v.responsePerson))}">
 
+
         <lightning:card title="Search actors results">
 
         <div style="text-align: center;">
