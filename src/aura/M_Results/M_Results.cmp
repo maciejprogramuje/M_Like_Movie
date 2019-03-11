@@ -110,9 +110,9 @@
         <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
                  aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
             <div class="slds-modal__container">
-
                 <header class="slds-modal__header">
-                    <h1>Add movie to base</h1>
+                    <p>No movies found</p>
+                    <p>You may add new movie to base</p>
                 </header>
 
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
