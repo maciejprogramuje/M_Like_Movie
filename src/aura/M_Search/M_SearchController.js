@@ -30,4 +30,8 @@
     clickAllHatedPersons: function(component, event, helper) {
         helper.allHatedPersons(component, event);
     },
+
+    clickSearchGenre: function(component, event, helper) {
+        helper.searchGenre(component, event);
+    },
 })

@@ -1,8 +1,8 @@
-<aura:component description="M_Results"
+<aura:component description="M_ResultGenre"
                 implements="flexipage:availableForAllPageTypes"
-                controller="M_Results">
+                controller="M_ResultGenre">
 
-    <aura:attribute name="title" type="String"/>
+    <aura:attribute name="genre" type="String"/>
     <aura:attribute name="page" type="Integer"/>
     <aura:attribute name="responseMovie" type="M_ResponseMovie"/>
     <aura:attribute name="selectedMovieId" type="String"/>
@@ -16,8 +16,11 @@
     <aura:attribute name="parentId" type="String"/>
 
 
-    <aura:handler event="c:M_SearchEvent"
+    <aura:handler event="c:M_SearchGenreEvent"
                   action="{!c.handleSearch}"/>
+
+    <aura:handler event="c:M_SearchEvent"
+                  action="{!c.handleClear}"/>
 
     <aura:handler event="c:M_ClearSearchEvent"
                   action="{!c.handleClear}"/>
@@ -40,11 +43,8 @@
     <aura:handler event="c:M_SearchTop10Event"
                   action="{!c.handleClear}"/>
 
-    <aura:handler event="c:M_SearchGenreEvent"
-                  action="{!c.handleClear}"/>
-
     <aura:if isTrue="{!not(empty(v.responseMovie))}">
-        <lightning:card title="Search movie results">
+        <lightning:card title="Search movie results by genre">
             <aura:set attribute="actions">
                 <lightning:button label="Add movie"
                                   onclick="{!c.openAddMovieDialog}"/>
@@ -205,3 +205,4 @@
 
     <c:M_Spinner aura:id="spinner"/>
 </aura:component>
+

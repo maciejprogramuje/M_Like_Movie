@@ -3,11 +3,12 @@
         component.set("v.isShowAddMovieDialog", false);
         component.set("v.isShowAddPosterDialog", false);
 
-        let title = event.getParam("titleToSearch");
         let page = event.getParam("pageToSearch");
         let genre = event.getParam("genreToSearch");
 
-        this.innerSearch(component, title, page, genre);
+
+
+        this.innerSearch(component, genre, page);
     },
 
     clear: function(component, event) {
@@ -19,19 +20,16 @@
         page = page + factor;
         component.set("v.page", page);
 
-        let title = component.get("v.title");
         let genre = component.get("v.genre");
 
-        this.innerSearch(component, title, page, genre);
+        this.innerSearch(component, genre, page);
     },
 
-    innerSearch: function(component, title, page, genre) {
-        component.set("v.title", title);
+    innerSearch: function(component, genre, page) {
         component.set("v.page", page);
         component.set("v.genre", genre);
 
         let search = component.get("c.getMovies");
-        search.setParam("title", title);
         search.setParam("pageNo", page);
         search.setParam("genre", genre);
         search.setCallback(this, function(response) {

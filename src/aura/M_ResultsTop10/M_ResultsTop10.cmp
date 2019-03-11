@@ -27,6 +27,9 @@
     <aura:handler event="c:M_SearchHatedPersonsEvent"
                   action="{!c.handleClear}"/>
 
+    <aura:handler event="c:M_SearchGenreEvent"
+                  action="{!c.handleClear}"/>
+
     <aura:if isTrue="{!not(empty(v.responseMovie))}">
         <lightning:card title="Top 10 favorites movies">
 

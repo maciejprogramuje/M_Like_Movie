@@ -1,5 +1,4 @@
-<aura:event type="APPLICATION" description="M_SearchEvent">
-    <aura:attribute name="titleToSearch" type="String"/>
+<aura:event type="APPLICATION" description="M_SearchGenreEvent">
     <aura:attribute name="pageToSearch" type="Integer"/>
     <aura:attribute name="genreToSearch" type="String"/>
 </aura:event>

@@ -1,19 +1,17 @@
-public with sharing class M_Results {
+public with sharing class M_ResultGenre {
     public static String endpoint = 'https://api.themoviedb.org/3';
     public static String apiKey = '2a226b222f0619bd09647e3c738cf7ee';
 
     @AuraEnabled
-    public static M_ResponseMovie getMovies(String title, Integer pageNo, String genre) {
-        M_ResponseMovie tempResponseMovie = getMoviesFromDb(title, pageNo);
+    public static M_ResponseMovie getMovies(String genre, Integer pageNo) {
+        M_ResponseMovie tempResponseMovie = convertM_ResponseGenre2M_ResponseMovie(getMoviesFromDb(genre, pageNo));
 
         if (tempResponseMovie.total_pages == pageNo) {
-            String tempTitle = title + '%';
-
             List<Movie_Inner_Db__c> moviesFromInnerDb = [
                     SELECT Id, Adult__c, Backdrop_Path__c, Is_Favorite__c, Is_Hated__c, Original_Language__c, Original_Title__c, Overview__c,
                             Popularity__c, Poster_Path__c, Release_Date__c, Title__c, Video__c, Vote_Average__c, Vote_Count__c, IdGenerated__c, Genre__c
                     FROM Movie_Inner_Db__c
-                    WHERE Title__c LIKE :tempTitle AND isActive__c = true
+                    WHERE Genre__c LIKE :genre AND isActive__c = true
             ];
 
             for (Movie_Inner_Db__c movieInnerDb : moviesFromInnerDb) {
@@ -83,8 +81,6 @@ public with sharing class M_Results {
         newMovie.Overview__c = addOverview;
         newMovie.Genre__c = addGenre;
 
-        System.debug('addGenre='+addGenre);
-
         Double d = math.random() * 2000000000;
         newMovie.IdGenerated__c = d.intValue();
 
@@ -93,9 +89,7 @@ public with sharing class M_Results {
         return results.getId();
     }
 
-    private static M_ResponseMovie getMoviesFromDb(String title, Integer pageNo) {
-        title = title.replaceAll(' ', '%20');
-
+    private static M_ResponseGenre getMoviesFromDb(String genre, Integer pageNo) {
         HttpRequest req = new HttpRequest();
         req.setMethod('GET');
         req.setHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -103,13 +97,14 @@ public with sharing class M_Results {
         Http http = new Http();
         HttpResponse res;
 
-        req.setEndpoint(endpoint + '/search/movie?api_key=' + apiKey + '&language=en-US&query=' + title + '&page=' + pageNo + '&include_adult=false');
+        req.setEndpoint(endpoint + '/discover/movie?api_key=' + apiKey + '&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=' + pageNo + '&with_genres=' + genre);
+
         try {
             res = http.send(req);
 
-            M_ResponseMovie responseMovie = (M_ResponseMovie) JSON.deserialize(res.getBody(), M_ResponseMovie.class);
+            M_ResponseGenre responseGenre = (M_ResponseGenre) JSON.deserialize(res.getBody(), M_ResponseGenre.class);
 
-            return responseMovie;
+            return responseGenre;
         } catch (system.CalloutException e) {
             System.debug('error >>> ' + e);
         }
@@ -141,5 +136,38 @@ public with sharing class M_Results {
                 }
             }
         }
+    }
+
+    private static M_ResponseMovie convertM_ResponseGenre2M_ResponseMovie(M_ResponseGenre responseGenre) {
+        M_ResponseMovie tempResponse = new M_ResponseMovie();
+        tempResponse.total_pages = responseGenre.total_pages;
+        tempResponse.total_results = responseGenre.total_results;
+        tempResponse.page = responseGenre.page;
+
+        List<M_ResponseMovie.Results> tempResults = new List<M_ResponseMovie.Results>();
+
+        for(M_ResponseGenre.Result genreResult : responseGenre.results) {
+            M_ResponseMovie.Results tempResult = new M_ResponseMovie.Results();
+            tempResult.vote_count = genreResult.vote_count;
+            tempResult.id = genreResult.id;
+            tempResult.video = genreResult.video;
+            tempResult.vote_average = genreResult.vote_average;
+            tempResult.title = genreResult.title;
+            tempResult.popularity = genreResult.popularity;
+            tempResult.poster_path = genreResult.poster_path;
+            tempResult.original_language = genreResult.original_language;
+            tempResult.original_title = genreResult.original_title;
+            //tempResult.genre_ids = genreResult.genres;
+            tempResult.backdrop_path = genreResult.backdrop_path;
+            tempResult.adult = genreResult.adult;
+            tempResult.overview = genreResult.overview;
+            tempResult.release_date = genreResult.release_date;
+
+            tempResults.add(tempResult);
+        }
+
+        tempResponse.results = tempResults;
+
+        return tempResponse;
     }
 }

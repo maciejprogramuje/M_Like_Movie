@@ -21,6 +21,28 @@
         }
     },
 
+    searchGenre: function(component, event) {
+        let genre = component.get("v.genre");
+
+        let clearSearchEvent = $A.get("e.c:M_ClearSearchEvent");
+        clearSearchEvent.fire();
+
+        if(genre && genre != 'none') {
+            let searchEvent = $A.get("e.c:M_SearchGenreEvent");
+            searchEvent.setParam("genreToSearch", genre);
+            searchEvent.setParam("pageToSearch", 1);
+            searchEvent.fire();
+        } else {
+            let noSearchDataToast = $A.get("e.force:showToast");
+            noSearchDataToast.setParams({
+                "title": "Enter data",
+                "message": "Enter movie genre, please.",
+                "type": "warning"
+            });
+            noSearchDataToast.fire();
+        }
+    },
+
     searchPerson: function(component, event) {
         let person = component.get("v.person");
 
@@ -79,6 +101,7 @@
     clearSearchForm: function(component, event) {
         component.set("v.title", null);
         component.set("v.person", null);
+        component.set("v.genre", "none");
 
         let clearSearchEvent = $A.get("e.c:M_ClearSearchEvent");
         clearSearchEvent.fire();

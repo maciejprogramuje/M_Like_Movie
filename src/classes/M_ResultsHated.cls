@@ -26,7 +26,7 @@ public with sharing class M_ResultsHated {
 
                 List<Movie_Inner_Db__c> moviesFromInnerDb = [
                         SELECT Id, Adult__c, Backdrop_Path__c, Is_Favorite__c, Is_Hated__c, Original_Language__c, Original_Title__c, Overview__c,
-                                Popularity__c, Poster_Path__c, Release_Date__c, Title__c, Video__c, Vote_Average__c, Vote_Count__c, IdGenerated__c
+                                Popularity__c, Poster_Path__c, Release_Date__c, Title__c, Video__c, Vote_Average__c, Vote_Count__c, IdGenerated__c, Genre__c
                         FROM Movie_Inner_Db__c
                         WHERE IdGenerated__c = :tempIdMovie AND isActive__c = true
                 ];
@@ -54,6 +54,7 @@ public with sharing class M_ResultsHated {
                     tempMovie.video = movieInnerDb.Video__c;
                     tempMovie.vote_average = movieInnerDb.Vote_Average__c;
                     tempMovie.vote_count = Integer.valueOf(movieInnerDb.Vote_Count__c);
+                    tempMovie.genre_ids = new List<String>{movieInnerDb.Genre__c};
 
                     tempResults.add(tempMovie);
                 }
