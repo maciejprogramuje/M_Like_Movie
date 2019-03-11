@@ -11,6 +11,17 @@
 
                 component.set("v.responsePerson", response.getReturnValue());
                 component.set("v.page", 1);
+
+                let responseResults = component.get("v.responsePerson.results");
+                if(responseResults.length <= 0) {
+                    let noSearchDataToast = $A.get("e.force:showToast");
+                    noSearchDataToast.setParams({
+                        "title": "No results",
+                        "message": "No any actor found",
+                        "type": "warning"
+                    });
+                    noSearchDataToast.fire();
+                }
             }
         });
         $A.enqueueAction(search);

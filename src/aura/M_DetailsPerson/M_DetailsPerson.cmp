@@ -66,12 +66,6 @@
                             {!v.person.name}
                     </div>
 
-                    <aura:if isTrue="{!v.personDetailsMore.also_known_as.length > 0}">
-                        <div class="slds-text-title_caps slds-m-vertical--small">
-                            Also known as: {!v.personDetailsMore.also_known_as}
-                        </div>
-                    </aura:if>
-
                     <aura:if isTrue="{!v.personDetailsMore.birthday != null}">
                         <div class="slds-text-title_caps slds-m-vertical--small">
                             Birthday: {!v.personDetailsMore.birthday}

@@ -33,6 +33,17 @@
                 this.switchSpinner(component, false);
 
                 component.set("v.responsePerson", response.getReturnValue());
+
+                let responseResults = component.get("v.responsePerson.results");
+                if(responseResults.length <= 0) {
+                    let noSearchDataToast = $A.get("e.force:showToast");
+                    noSearchDataToast.setParams({
+                        "title": "No results",
+                        "message": "No any actor / actress found",
+                        "type": "warning"
+                    });
+                    noSearchDataToast.fire();
+                }
             }
         });
         $A.enqueueAction(search);

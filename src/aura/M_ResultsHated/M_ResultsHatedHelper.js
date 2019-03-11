@@ -11,6 +11,17 @@
 
                 component.set("v.responseMovie", response.getReturnValue());
                 component.set("v.page", 1);
+
+                let responseResults = component.get("v.responseMovie.results");
+                if(responseResults.length <= 0) {
+                    let noSearchDataToast = $A.get("e.force:showToast");
+                    noSearchDataToast.setParams({
+                        "title": "No results",
+                        "message": "No any movie found",
+                        "type": "warning"
+                    });
+                    noSearchDataToast.fire();
+                }
             }
         });
         $A.enqueueAction(searchHated);

@@ -31,9 +31,7 @@
     <aura:handler event="c:M_SearchGenreEvent"
                   action="{!c.handleClear}"/>
 
-    <aura:if isTrue="{!not(empty(v.responsePerson))}">
-
-
+    <aura:if isTrue="{!not(empty(v.responsePerson.results))}">
         <lightning:card title="Search actors results">
 
         <div style="text-align: center;">

@@ -30,7 +30,7 @@
     <aura:handler event="c:M_SearchGenreEvent"
                   action="{!c.handleClear}"/>
 
-    <aura:if isTrue="{!not(empty(v.responseMovie))}">
+    <aura:if isTrue="{!not(empty(v.responseMovie.results))}">
         <lightning:card title="Your favorites movies">
 
             <div style="text-align: center;">
