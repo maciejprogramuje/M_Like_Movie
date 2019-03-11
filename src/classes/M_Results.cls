@@ -48,6 +48,8 @@ public with sharing class M_Results {
         assignHated(tempResponseMovie);
         assignFavorite(tempResponseMovie);
 
+        tempResponseMovie.results.sort();
+
         return tempResponseMovie;
     }
 

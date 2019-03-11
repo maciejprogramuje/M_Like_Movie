@@ -26,6 +26,8 @@ public with sharing class M_ResultsPersons {
             assignHated(responsePerson);
             assignFavorite(responsePerson);
 
+            responsePerson.results.sort();
+
             return responsePerson;
         } catch (system.CalloutException e) {
             System.debug('error >>> ' + e);

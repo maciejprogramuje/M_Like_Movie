@@ -62,6 +62,8 @@ public with sharing class M_ResultsHated {
 
         tempResponseMovie.results = tempResults;
 
+        tempResponseMovie.results.sort();
+
         return tempResponseMovie;
     }
 

@@ -22,6 +22,8 @@ public with sharing class M_ResultsHatedPersons {
 
         tempResponsePerson.results = tempResults;
 
+        tempResponsePerson.results.sort();
+
         return tempResponsePerson;
     }
 

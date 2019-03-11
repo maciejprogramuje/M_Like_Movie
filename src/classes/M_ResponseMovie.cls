@@ -8,7 +8,7 @@ global class M_ResponseMovie {
     @AuraEnabled
     global List<Results> results { get; set; }
 
-    global class Results {
+    global class Results implements Comparable {
         @AuraEnabled
         global Integer vote_count { get; set; }
         @AuraEnabled
@@ -45,5 +45,12 @@ global class M_ResponseMovie {
         global Boolean is_favorite { get; set; }
         @AuraEnabled
         global Boolean is_from_attachment { get; set; }
+
+        global Integer compareTo(Object compareTo) {
+            M_ResponseMovie.Results result1 = (M_ResponseMovie.Results) compareTo;
+            if(title == result1.title) return 0;
+            if(title > result1.title) return 1;
+            return -1;
+        }
     }
 }

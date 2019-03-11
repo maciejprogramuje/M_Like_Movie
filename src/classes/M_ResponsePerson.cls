@@ -41,7 +41,7 @@ global class M_ResponsePerson {
         public String release_date { get; set; }
     }
 
-    public class Result {
+    public class Result implements Comparable {
         @AuraEnabled
         public Decimal popularity { get; set; }
         @AuraEnabled
@@ -59,5 +59,12 @@ global class M_ResponsePerson {
         public Boolean is_hated { get; set; }
         @AuraEnabled
         public Boolean is_favorite { get; set; }
+
+        public Integer compareTo(Object compareTo) {
+            M_ResponsePerson.Result result1 = (M_ResponsePerson.Result) compareTo;
+            if(name == result1.name) return 0;
+            if(name > result1.name) return 1;
+            return -1;
+        }
     }
 }

@@ -65,6 +65,8 @@ public with sharing class M_ResultsFavorites {
 
         tempResponseMovie.results = tempResults;
 
+        tempResponseMovie.results.sort();
+
         return tempResponseMovie;
     }
 
